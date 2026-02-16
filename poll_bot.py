@@ -40,7 +40,7 @@ def get_other_question(chat_id):
     return group_other_questions.get(chat_id, DEFAULT_OTHER_QUESTION)
 
 # ---------- SAT Poll ----------
-async def poll_sat(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def pollsat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     thread_id = getattr(update.message, "message_thread_id", None)
     options = get_sat_options(chat_id)
@@ -55,7 +55,7 @@ async def poll_sat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 # ---------- Other Events Poll ----------
-async def poll_other(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def pollother(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     thread_id = getattr(update.message, "message_thread_id", None)
     options = get_other_options(chat_id)
@@ -71,31 +71,31 @@ async def poll_other(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 # ---------- Set SAT Poll Options ----------
-async def set_sat(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def setsat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     text = " ".join(context.args)
     if not text:
-        await update.message.reply_text("Usage: /set_sat option1 | option2 | option3")
+        await update.message.reply_text("Usage: /setsat option1 | option2 | option3")
         return
     group_sat_options[chat_id] = [opt.strip() for opt in text.split("|") if opt.strip()]
     await update.message.reply_text(f"✅ SAT poll options updated:\n{group_sat_options[chat_id]}")
 
 # ---------- Set Other Poll Options ----------
-async def set_other(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def setother(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     text = " ".join(context.args)
     if not text:
-        await update.message.reply_text("Usage: /set_other option1 | option2 | option3")
+        await update.message.reply_text("Usage: /setother option1 | option2 | option3")
         return
     group_other_options[chat_id] = [opt.strip() for opt in text.split("|") if opt.strip()]
     await update.message.reply_text(f"✅ Other poll options updated:\n{group_other_options[chat_id]}")
 
 # ---------- Set Other Poll Question ----------
-async def set_question_other(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def setquestionother(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     text = " ".join(context.args)
     if not text:
-        await update.message.reply_text("Usage: /set_question_other Your new poll question")
+        await update.message.reply_text("Usage: /setquestionother Your new poll question")
         return
     group_other_questions[chat_id] = text
     await update.message.reply_text(f"✅ Other Events poll question updated:\n{text}")
@@ -109,13 +109,14 @@ app = ApplicationBuilder().token(BOT_TOKEN).build()
 
 # Add handlers
 app.add_handler(CommandHandler("start", start))
-app.add_handler(CommandHandler("poll_sat", poll_sat))
-app.add_handler(CommandHandler("poll_other", poll_other))
-app.add_handler(CommandHandler("set_sat", set_sat))
-app.add_handler(CommandHandler("set_other", set_other))
-app.add_handler(CommandHandler("set_question_other", set_question_other))
+app.add_handler(CommandHandler("pollsat", pollsat))
+app.add_handler(CommandHandler("pollother", pollother))
+app.add_handler(CommandHandler("setsat", setsat))
+app.add_handler(CommandHandler("setother", setother))
+app.add_handler(CommandHandler("setquestionother", setquestionother))
 
 print("Bot started...")
 app.run_polling()
+
 
 
